@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>    
+    <script type="text/javascript">                               
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+      
+      function drawTable() {                
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('string', 'Make');
+        data.addColumn('string', 'Model');        
+        data.addColumn('number', 'Sale Price');                
+        fetch("https://my.api.mockaroo.com/twt_prompt.json?key=1e872ee0").then((response) => response.json()).then(object => {        
+          object.forEach(item => data.addRow([item.import_country, item.make, item.model, {v: item.sale_price, f: '$' + item.sale_price}])) 
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(data, {showRowNumber: true, width: '100%', height: '98%', page: 'enable', pageSize: 125, sortColumn: 3, sortAscending: false});
+        })
+      }            
+    </script>
+  </head>
+  <body>
+    <div id="table_div"></div>
+  </body>
+</html>
