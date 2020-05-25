@@ -1,18 +1,28 @@
-var http = require('http')
-var fs = require('fs')
+var http = require('http');
+var fs = require('fs');
 
 function handleRequest(request, response) {
-    response.writeHead(200, {'Content type': 'text/html'})
-    fs.readFile('./index.html', function(err, content) {
-        if(err) {
-            response.writeHead(404)
-            response.write('File not found')
+    var filePath = '.' + request.url;
+    if (filePath == './') {
+        filePath = './index.html';
+    }    
+    
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            if(error.code == 'ENOENT') {
+                response.writeHead(404)                
+                response.end(content, 'utf-8');            
+            }
+            else {
+                response.writeHead(500);
+                response.end(error.code);
+            }
         }
         else {
-            response.write(content)
+            response.writeHead(200, { 'Content-Type': 'text/html' });
+            response.end(content, 'utf-8');
         }
-        response.end()
-    })
+    });
 }
 
 http.createServer(handleRequest).listen(8000)
