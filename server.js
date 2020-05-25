@@ -7,15 +7,15 @@ function handleRequest(request, response) {
         filePath = './index.html';
     }    
     
-    fs.readFile(filePath, function(error, content) {
-        if (error) {
-            if(error.code == 'ENOENT') {
+    fs.readFile(filePath, function(err, content) {
+        if(err) {
+            if(err.code == 'ENOENT') {
                 response.writeHead(404)                
-                response.end(content, 'utf-8');            
+                response.end(err.code);            
             }
             else {
                 response.writeHead(500);
-                response.end(error.code);
+                response.end(err.code);
             }
         }
         else {
